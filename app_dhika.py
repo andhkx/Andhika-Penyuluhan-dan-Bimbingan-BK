@@ -138,14 +138,48 @@ def dashboardDhika():
         persentaseAktifDhika = 0
         if totalKonselingDhika > 0:
             persentaseAktifDhika = int((konselingAktifDhika / totalKonselingDhika) * 100)
-        
+        # Ambil aktivitas terbaru (contoh: 10 aktivitas terakhir dari Konseling, User, Notifikasi)
+        aktivitasTerbaruDhika = []
+        # Konseling baru diajukan
+        konselingBaruList = KonselingDhika.query.order_by(KonselingDhika.createdDhika.desc()).limit(3).all()
+        for k in konselingBaruList:
+            aktivitasTerbaruDhika.append({
+                'icon': 'calendar-plus',
+                'type': 'konseling',
+                'title': 'Konseling Baru Diajukan',
+                'desc': f"{UserDhika.query.get(k.siswaIdDhika).namaDhika} mengajukan konseling {k.jenisDhika}",
+                'waktu': k.createdDhika
+            })
+        # Konseling selesai
+        konselingSelesaiList = KonselingDhika.query.filter_by(statusDhika='selesai').order_by(KonselingDhika.createdDhika.desc()).limit(2).all()
+        for k in konselingSelesaiList:
+            aktivitasTerbaruDhika.append({
+                'icon': 'check-circle',
+                'type': 'konseling',
+                'title': 'Konseling Selesai',
+                'desc': f"Guru BK menyelesaikan sesi dengan {UserDhika.query.get(k.siswaIdDhika).namaDhika}",
+                'waktu': k.createdDhika
+            })
+        # User baru ditambahkan
+        userBaruList = UserDhika.query.order_by(UserDhika.createdDhika.desc()).filter(UserDhika.createdDhika >= datetime.now() - timedelta(hours=24)).limit(2).all()
+        for u in userBaruList:
+            aktivitasTerbaruDhika.append({
+                'icon': 'user-plus',
+                'type': 'user',
+                'title': 'User Baru Ditambahkan',
+                'desc': f"{u.roleDhika.title()} baru: {u.namaDhika}",
+                'waktu': u.createdDhika
+            })
+        # Urutkan aktivitas berdasarkan waktu terbaru
+        aktivitasTerbaruDhika = sorted(aktivitasTerbaruDhika, key=lambda x: x['waktu'], reverse=True)[:6]
         return render_template('dashboard_admin_dhika.html',
                              total_siswa=totalSiswaDhika,
                              total_guru=totalGuruDhika,
                              total_konseling=totalKonselingDhika,
                              siswa_baru=siswaBaruDhika,
                              konseling_berhasil=konselingBerhasilDhika,
-                             persentase_aktif=persentaseAktifDhika)
+                             persentase_aktif=persentaseAktifDhika,
+                             aktivitas_terbaru=aktivitasTerbaruDhika)
     
     return redirect(url_for('loginDhika'))
 

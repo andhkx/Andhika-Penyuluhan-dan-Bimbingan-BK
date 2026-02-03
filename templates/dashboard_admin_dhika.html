@@ -373,55 +373,17 @@
             <div class="chartCardDhika">
                 <h4><i class="fas fa-history text-info"></i> Aktivitas Terbaru</h4>
                 
+                {% for activity in aktivitas_terbaru %}
                 <div class="activityItemDhika">
-                    <div class="activityIconDhika login">
-                        <i class="fas fa-sign-in-alt"></i>
+                    <div class="activityIconDhika {{ activity.type }}">
+                        <i class="fas fa-{{ activity.icon }}"></i>
                     </div>
                     <div class="activityContentDhika">
-                        <h6>Login User Baru</h6>
-                        <small>Ahmad Fauzi login sebagai siswa - 5 menit yang lalu</small>
+                        <h6>{{ activity.title }}</h6>
+                        <small>{{ activity.desc }} - {{ activity.waktu.strftime('%d/%m/%Y %H:%M') }}</small>
                     </div>
                 </div>
-                
-                <div class="activityItemDhika">
-                    <div class="activityIconDhika konseling">
-                        <i class="fas fa-calendar-plus"></i>
-                    </div>
-                    <div class="activityContentDhika">
-                        <h6>Konseling Baru Diajukan</h6>
-                        <small>Siti Nurhaliza mengajukan konseling pribadi - 15 menit yang lalu</small>
-                    </div>
-                </div>
-                
-                <div class="activityItemDhika">
-                    <div class="activityIconDhika user">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="activityContentDhika">
-                        <h6>User Baru Ditambahkan</h6>
-                        <small>Admin menambahkan Guru BK baru: Ibu Rina - 1 jam yang lalu</small>
-                    </div>
-                </div>
-                
-                <div class="activityItemDhika">
-                    <div class="activityIconDhika konseling">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="activityContentDhika">
-                        <h6>Konseling Selesai</h6>
-                        <small>Guru BK menyelesaikan sesi dengan Budi Santoso - 2 jam yang lalu</small>
-                    </div>
-                </div>
-                
-                <div class="activityItemDhika">
-                    <div class="activityIconDhika login">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <div class="activityContentDhika">
-                        <h6>Backup Otomatis</h6>
-                        <small>Sistem melakukan backup database otomatis - 3 jam yang lalu</small>
-                    </div>
-                </div>
+                {% endfor %}
                 
                 <div class="text-center mt-3">
                     <a href="#" class="btn btn-outline-primary">
