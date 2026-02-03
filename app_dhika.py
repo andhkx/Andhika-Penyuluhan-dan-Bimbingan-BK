@@ -138,7 +138,6 @@ def dashboardDhika():
         persentaseAktifDhika = 0
         if totalKonselingDhika > 0:
             persentaseAktifDhika = int((konselingAktifDhika / totalKonselingDhika) * 100)
-        # Ambil aktivitas terbaru (contoh: 10 aktivitas terakhir dari Konseling, User, Notifikasi)
         aktivitasTerbaruDhika = []
         # Konseling baru diajukan
         konselingBaruList = KonselingDhika.query.order_by(KonselingDhika.createdDhika.desc()).limit(3).all()
