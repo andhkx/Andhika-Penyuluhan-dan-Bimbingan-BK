@@ -132,11 +132,20 @@ def dashboardDhika():
         totalSiswaDhika = UserDhika.query.filter_by(roleDhika='siswa').count()
         totalGuruDhika = UserDhika.query.filter_by(roleDhika='guru_bk').count()
         totalKonselingDhika = KonselingDhika.query.count()
+        siswaBaruDhika = UserDhika.query.filter_by(roleDhika='siswa').filter(dbDhika.func.date(UserDhika.createdDhika) == datetime.now().date()).count()
+        konselingBerhasilDhika = KonselingDhika.query.filter_by(statusDhika='selesai').count()
+        konselingAktifDhika = KonselingDhika.query.filter(KonselingDhika.statusDhika.in_(['pending','disetujui'])).count()
+        persentaseAktifDhika = 0
+        if totalKonselingDhika > 0:
+            persentaseAktifDhika = int((konselingAktifDhika / totalKonselingDhika) * 100)
         
         return render_template('dashboard_admin_dhika.html',
                              total_siswa=totalSiswaDhika,
                              total_guru=totalGuruDhika,
-                             total_konseling=totalKonselingDhika)
+                             total_konseling=totalKonselingDhika,
+                             siswa_baru=siswaBaruDhika,
+                             konseling_berhasil=konselingBerhasilDhika,
+                             persentase_aktif=persentaseAktifDhika)
     
     return redirect(url_for('loginDhika'))
 
