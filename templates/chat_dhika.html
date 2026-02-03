@@ -1,0 +1,287 @@
+{% extends 'base_dhika.html' %}
+
+{% block titleDhika %}Chat - BK SMKN 2 Cimahi{% endblock %}
+
+{% block styleDhika %}
+<style>
+    .chatContainerDhika {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        height: calc(100vh - 150px);
+        display: flex;
+    }
+    
+    .chatSidebarDhika {
+        width: 350px;
+        border-right: 1px solid #e0e0e0;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .chatHeaderDhika {
+        padding: 25px;
+        border-bottom: 1px solid #e0e0e0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .chatHeaderDhika h4 {
+        margin: 0;
+        font-weight: 600;
+    }
+    
+    .chatSearchDhika {
+        padding: 15px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .chatSearchDhika input {
+        width: 100%;
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 25px;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+    
+    .chatSearchDhika input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .contactListDhika {
+        flex: 1;
+        overflow-y: auto;
+    }
+    
+    .contactItemDhika {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .contactItemDhika:hover {
+        background: #f8f9fa;
+    }
+    
+    .contactItemDhika.active {
+        background: linear-gradient(90deg, rgba(102,126,234,0.1) 0%, transparent 100%);
+        border-left: 4px solid #667eea;
+    }
+    
+    .contactAvatarDhika {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 20px;
+        flex-shrink: 0;
+        position: relative;
+    }
+    
+    .onlineStatusDhika {
+        width: 12px;
+        height: 12px;
+        background: #50C878;
+        border: 2px solid white;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+    }
+    
+    .contactInfoDhika {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .contactInfoDhika h6 {
+        margin: 0 0 5px 0;
+        font-weight: 600;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .contactInfoDhika p {
+        margin: 0;
+        font-size: 13px;
+        color: #666;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .contactMetaDhika {
+        text-align: right;
+        flex-shrink: 0;
+    }
+    
+    .contactMetaDhika small {
+        color: #999;
+        font-size: 12px;
+    }
+    
+    .unreadBadgeDhika {
+        background: #667eea;
+        color: white;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 600;
+        margin-top: 5px;
+    }
+    
+    .chatMainDhika {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .emptyStateDhika {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+    }
+    
+    .emptyStateDhika i {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.3;
+    }
+    
+    .emptyStateDhika h4 {
+        color: #666;
+        font-weight: 600;
+    }
+    
+    .emptyStateDhika p {
+        color: #999;
+    }
+    
+    @media (max-width: 768px) {
+        .chatSidebarDhika {
+            width: 100%;
+            display: none;
+        }
+        
+        .chatSidebarDhika.show {
+            display: flex;
+        }
+        
+        .chatMainDhika {
+            display: none;
+        }
+        
+        .chatMainDhika.show {
+            display: flex;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block contentDhika %}
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2 class="fw-bold text-white">
+                <i class="fas fa-comments"></i> Pesan
+            </h2>
+            <p class="text-white-50">Komunikasi dengan Guru BK atau Siswa</p>
+        </div>
+    </div>
+    
+    <div class="chatContainerDhika">
+        <div class="chatSidebarDhika" id="chatSidebarDhika">
+            <div class="chatHeaderDhika">
+                <h4><i class="fas fa-comments"></i> Pesan</h4>
+            </div>
+            
+            <div class="chatSearchDhika">
+                <input type="text" placeholder="🔍 Cari kontak..." id="searchContactDhika">
+            </div>
+            
+            <div class="contactListDhika" id="contactListDhika">
+                {% if kontak_list %}
+                    {% for kontak in kontak_list %}
+                    <div class="contactItemDhika" onclick="openChatDhika({{ kontak.idDhika }}, '{{ kontak.namaDhika }}')">
+                        <div class="contactAvatarDhika">
+                            {{ kontak.namaDhika[0].upper() }}
+                            <div class="onlineStatusDhika"></div>
+                        </div>
+                        <div class="contactInfoDhika">
+                            <h6>{{ kontak.namaDhika }}</h6>
+                            <p>
+                                {% if kontak.roleDhika == 'guru_bk' %}
+                                <i class="fas fa-chalkboard-teacher"></i> Guru BK
+                                {% else %}
+                                <i class="fas fa-user-graduate"></i> Siswa
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="contactMetaDhika">
+                            <small>10:30</small>
+                            <div class="unreadBadgeDhika">3</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Belum ada kontak</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="chatMainDhika" id="chatMainDhika">
+            <div class="emptyStateDhika">
+                <i class="fas fa-comments"></i>
+                <h4>Pilih kontak untuk mulai chat</h4>
+                <p>Klik salah satu kontak di sebelah kiri untuk memulai percakapan</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDhika %}
+<script>
+    function openChatDhika(userId, userName) {
+        window.location.href = `/chat/${userId}`;
+    }
+    
+    document.getElementById('searchContactDhika').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const contacts = document.querySelectorAll('.contactItemDhika');
+        
+        contacts.forEach(contact => {
+            const name = contact.querySelector('h6').textContent.toLowerCase();
+            if (name.includes(searchTerm)) {
+                contact.style.display = 'flex';
+            } else {
+                contact.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

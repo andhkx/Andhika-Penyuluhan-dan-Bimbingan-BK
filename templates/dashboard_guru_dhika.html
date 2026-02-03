@@ -1,0 +1,313 @@
+{% extends 'base_dhika.html' %}
+
+{% block titleDhika %}Dashboard Guru BK - BK SMKN 2 Cimahi{% endblock %}
+
+{% block styleDhika %}
+<style>
+    .statCardGuruDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-left: 5px solid;
+        transition: transform 0.3s;
+    }
+    
+    .statCardGuruDhika:hover {
+        transform: translateY(-5px);
+    }
+    
+    .statCardGuruDhika.pending {
+        border-left-color: #F39C12;
+    }
+    
+    .statCardGuruDhika.today {
+        border-left-color: #50C878;
+    }
+    
+    .statCardGuruDhika.total {
+        border-left-color: #4A90E2;
+    }
+    
+    .statCardGuruDhika h3 {
+        font-size: 42px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: #333;
+    }
+    
+    .statCardGuruDhika p {
+        color: #666;
+        margin: 0;
+        font-size: 14px;
+    }
+    
+    .statCardGuruDhika i {
+        font-size: 36px;
+        float: right;
+        opacity: 0.3;
+    }
+    
+    .jadwalCardDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        border-left: 4px solid #4A90E2;
+        transition: all 0.3s;
+    }
+    
+    .jadwalCardDhika:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+    
+    .jadwalTimeDhika {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        display: inline-block;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .quickStatDhika {
+        text-align: center;
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        transition: all 0.3s;
+    }
+    
+    .quickStatDhika:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+    
+    .quickStatDhika i {
+        font-size: 40px;
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+    
+    .quickStatDhika h4 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+    
+    .quickStatDhika p {
+        color: #666;
+        margin: 0;
+        font-size: 13px;
+    }
+</style>
+{% endblock %}
+
+{% block contentDhika %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-white">
+                <i class="fas fa-chalkboard-teacher"></i> Dashboard Guru BK
+            </h2>
+            <p class="text-white-50">Kelola konseling dan pantau siswa binaan Anda</p>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="statCardGuruDhika pending">
+                <i class="fas fa-clock text-warning"></i>
+                <h3>{{ pending }}</h3>
+                <p>Permintaan Menunggu</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="statCardGuruDhika today">
+                <i class="fas fa-calendar-day text-success"></i>
+                <h3>{{ hari_ini }}</h3>
+                <p>Konseling Hari Ini</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="statCardGuruDhika total">
+                <i class="fas fa-chart-line text-primary"></i>
+                <h3>{{ konseling|length }}</h3>
+                <p>Total Konseling</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <a href="{{ url_for('kelolaKonselingDhika') }}" style="text-decoration: none;">
+                <div class="quickStatDhika">
+                    <i class="fas fa-tasks"></i>
+                    <h4>{{ pending }}</h4>
+                    <p>Kelola Permintaan</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('chatDhika') }}" style="text-decoration: none;">
+                <div class="quickStatDhika">
+                    <i class="fas fa-comments"></i>
+                    <h4>5</h4>
+                    <p>Pesan Baru</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="#" style="text-decoration: none;">
+                <div class="quickStatDhika">
+                    <i class="fas fa-users"></i>
+                    <h4>25</h4>
+                    <p>Siswa Binaan</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="#" style="text-decoration: none;">
+                <div class="quickStatDhika">
+                    <i class="fas fa-file-alt"></i>
+                    <h4>12</h4>
+                    <p>Laporan Bulan Ini</p>
+                </div>
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-7">
+            <div class="cardDhika">
+                <h4 class="fw-bold mb-4">
+                    <i class="fas fa-calendar-check text-primary"></i> Jadwal Konseling Hari Ini
+                </h4>
+                
+                {% if hari_ini > 0 %}
+                <div class="jadwalCardDhika">
+                    <div class="jadwalTimeDhika">
+                        <i class="fas fa-clock"></i> 08:00 - 09:00
+                    </div>
+                    <h5 class="fw-bold mb-2">Ahmad Fauzi</h5>
+                    <p class="text-muted mb-2">
+                        <i class="fas fa-tag"></i> Bimbingan Pribadi
+                    </p>
+                    <p class="mb-0">
+                        <small class="text-muted">Masalah: Kesulitan adaptasi lingkungan baru</small>
+                    </p>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-video"></i> Mulai Sesi
+                        </button>
+                        <button class="btn btn-sm btn-info">
+                            <i class="fas fa-eye"></i> Detail
+                        </button>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Tidak ada jadwal konseling hari ini</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-md-5">
+            <div class="cardDhika">
+                <h4 class="fw-bold mb-4">
+                    <i class="fas fa-bell text-warning"></i> Permintaan Terbaru
+                </h4>
+                
+                {% if pending > 0 %}
+                <div class="list-group">
+                    <div class="list-group-item border-0 mb-2" style="border-left: 3px solid #F39C12 !important; border-radius: 8px;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1 fw-bold">Siti Nurhaliza</h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar"></i> 30 Nov 2024, 10:00
+                                </small>
+                                <br>
+                                <span class="badge bg-warning text-dark mt-1">Bimbingan Sosial</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-success" title="Setujui">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" title="Tolak">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('kelolaKonselingDhika') }}" class="btn btnPrimaryDhika">
+                        Lihat Semua Permintaan
+                    </a>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <p class="text-muted">Tidak ada permintaan baru</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="cardDhika">
+                <h4 class="fw-bold mb-4">
+                    <i class="fas fa-chart-bar text-info"></i> Statistik Konseling Bulan Ini
+                </h4>
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="py-3">
+                            <i class="fas fa-user-circle fa-2x text-primary mb-2"></i>
+                            <h5 class="fw-bold">8</h5>
+                            <small class="text-muted">Bimbingan Pribadi</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="py-3">
+                            <i class="fas fa-users fa-2x text-success mb-2"></i>
+                            <h5 class="fw-bold">5</h5>
+                            <small class="text-muted">Bimbingan Sosial</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="py-3">
+                            <i class="fas fa-briefcase fa-2x text-warning mb-2"></i>
+                            <h5 class="fw-bold">12</h5>
+                            <small class="text-muted">Bimbingan Karir</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="py-3">
+                            <i class="fas fa-book fa-2x text-danger mb-2"></i>
+                            <h5 class="fw-bold">7</h5>
+                            <small class="text-muted">Bimbingan Belajar</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDhika %}
+<script>
+    setInterval(function() {
+    }, 30000);
+</script>
+{% endblock %}

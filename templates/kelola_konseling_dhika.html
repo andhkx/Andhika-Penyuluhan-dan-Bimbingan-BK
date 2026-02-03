@@ -1,0 +1,400 @@
+{% extends 'base_dhika.html' %}
+
+{% block titleDhika %}Kelola Konseling - BK SMKN 2 Cimahi{% endblock %}
+
+{% block styleDhika %}
+<style>
+    .filterTabsDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .filterBtnDhika {
+        padding: 10px 25px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+    
+    .filterBtnDhika:hover {
+        border-color: #667eea;
+        color: #667eea;
+    }
+    
+    .filterBtnDhika.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+    
+    .konselingItemDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        border-left: 5px solid;
+    }
+    
+    .konselingItemDhika.pending {
+        border-left-color: #F39C12;
+    }
+    
+    .konselingItemDhika.disetujui {
+        border-left-color: #50C878;
+    }
+    
+    .konselingItemDhika.ditolak {
+        border-left-color: #E74C3C;
+    }
+    
+    .konselingItemDhika.selesai {
+        border-left-color: #3498DB;
+    }
+    
+    .konselingItemDhika:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .siswaInfoDhika {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .siswaAvatarDhika {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+    }
+    
+    .siswaDetailsDhika h5 {
+        margin: 0 0 5px 0;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .siswaDetailsDhika p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .konselingInfoDhika {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .konselingInfoDhika .row > div {
+        margin-bottom: 10px;
+    }
+    
+    .konselingInfoDhika strong {
+        color: #667eea;
+        font-weight: 600;
+    }
+    
+    .actionBtnsDhika {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .actionBtnsDhika .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .modalDhika {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        animation: fadeInDhika 0.3s;
+    }
+    
+    @keyframes fadeInDhika {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .modalContentDhika {
+        background: white;
+        margin: 5% auto;
+        padding: 30px;
+        border-radius: 20px;
+        max-width: 600px;
+        animation: slideInDhika 0.3s;
+    }
+    
+    @keyframes slideInDhika {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block contentDhika %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-white">
+                <i class="fas fa-tasks"></i> Kelola Konseling
+            </h2>
+            <p class="text-white-50">Kelola semua permintaan dan sesi konseling</p>
+        </div>
+    </div>
+    
+    <div class="filterTabsDhika">
+        <button class="filterBtnDhika active" onclick="filterKonselingDhika('semua')">
+            <i class="fas fa-list"></i> Semua
+        </button>
+        <button class="filterBtnDhika" onclick="filterKonselingDhika('pending')">
+            <i class="fas fa-clock"></i> Pending
+        </button>
+        <button class="filterBtnDhika" onclick="filterKonselingDhika('disetujui')">
+            <i class="fas fa-check-circle"></i> Disetujui
+        </button>
+        <button class="filterBtnDhika" onclick="filterKonselingDhika('selesai')">
+            <i class="fas fa-check-double"></i> Selesai
+        </button>
+        <button class="filterBtnDhika" onclick="filterKonselingDhika('ditolak')">
+            <i class="fas fa-times-circle"></i> Ditolak
+        </button>
+    </div>
+    
+    <div id="konselingListDhika">
+        {% if konseling_list %}
+            {% for k in konseling_list %}
+            <div class="konselingItemDhika {{ k.statusDhika }}" data-status="{{ k.statusDhika }}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="siswaInfoDhika">
+                            <div class="siswaAvatarDhika">
+                                S
+                            </div>
+                            <div class="siswaDetailsDhika">
+                                <h5>Siswa (ID: {{ k.siswaIdDhika }})</h5>
+                                <p>
+                                    <i class="fas fa-calendar"></i> 
+                                    {{ k.tanggalDhika.strftime('%d %B %Y, %H:%M') if k.tanggalDhika else '-' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="konselingInfoDhika">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-2">
+                                        <strong><i class="fas fa-tag"></i> Jenis:</strong><br>
+                                        <span class="badge bg-primary">{{ k.jenisDhika }}</span>
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2">
+                                        <strong><i class="fas fa-info-circle"></i> Status:</strong><br>
+                                        <span class="badge 
+                                            {% if k.statusDhika == 'pending' %}bg-warning text-dark
+                                            {% elif k.statusDhika == 'disetujui' %}bg-success
+                                            {% elif k.statusDhika == 'ditolak' %}bg-danger
+                                            {% elif k.statusDhika == 'selesai' %}bg-info
+                                            {% endif %}">
+                                            {{ k.statusDhika }}
+                                        </span>
+                                    </p>
+                                </div>
+                                {% if k.keteranganDhika %}
+                                <div class="col-12">
+                                    <p class="mb-0">
+                                        <strong><i class="fas fa-comment-dots"></i> Keterangan:</strong><br>
+                                        {{ k.keteranganDhika }}
+                                    </p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if k.catatanDhika %}
+                        <div class="alert alert-info mb-0">
+                            <strong><i class="fas fa-clipboard"></i> Catatan Anda:</strong><br>
+                            {{ k.catatanDhika }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="actionBtnsDhika">
+                            {% if k.statusDhika == 'pending' %}
+                            <button class="btn btn-success" onclick="updateStatusDhika({{ k.idDhika }}, 'disetujui')">
+                                <i class="fas fa-check"></i> Setujui
+                            </button>
+                            <button class="btn btn-danger" onclick="updateStatusDhika({{ k.idDhika }}, 'ditolak')">
+                                <i class="fas fa-times"></i> Tolak
+                            </button>
+                            {% elif k.statusDhika == 'disetujui' %}
+                            <button class="btn btn-primary" onclick="openCatatanModalDhika({{ k.idDhika }})">
+                                <i class="fas fa-clipboard"></i> Tambah Catatan
+                            </button>
+                            <button class="btn btn-success" onclick="updateStatusDhika({{ k.idDhika }}, 'selesai')">
+                                <i class="fas fa-check-double"></i> Selesai
+                            </button>
+                            {% endif %}
+                            
+                            <button class="btn btn-info" onclick="detailKonselingDhika({{ k.idDhika }})">
+                                <i class="fas fa-eye"></i> Detail
+                            </button>
+                            
+                            <a href="{{ url_for('chatDhika') }}" class="btn btn-secondary">
+                                <i class="fas fa-comments"></i> Chat
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="cardDhika text-center py-5">
+            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+            <h5 class="text-muted">Belum ada data konseling</h5>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div id="catatanModalDhika" class="modalDhika">
+    <div class="modalContentDhika">
+        <h4 class="fw-bold mb-3">
+            <i class="fas fa-clipboard"></i> Tambah Catatan Konseling
+        </h4>
+        <form id="formCatatanDhika">
+            <input type="hidden" id="konselingIdDhika" name="konseling_id">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Catatan Sesi:</label>
+                <textarea class="form-control" id="catatanDhika" name="catatan" rows="5" required></textarea>
+                <small class="text-muted">Tulis hasil konseling, progress, dan rekomendasi</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeCatatanModalDhika()">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDhika %}
+<script>
+    function filterKonselingDhika(status) {
+        document.querySelectorAll('.filterBtnDhika').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        const items = document.querySelectorAll('.konselingItemDhika');
+        items.forEach(item => {
+            if (status === 'semua' || item.dataset.status === status) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+    
+    function updateStatusDhika(idDhika, statusDhika) {
+        if (confirm(`Apakah Anda yakin ingin ${statusDhika === 'disetujui' ? 'menyetujui' : 'menolak'} konseling ini?`)) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/konseling/update/${idDhika}`;
+            
+            const statusInput = document.createElement('input');
+            statusInput.type = 'hidden';
+            statusInput.name = 'status';
+            statusInput.value = statusDhika;
+            
+            form.appendChild(statusInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    
+    function openCatatanModalDhika(idDhika) {
+        document.getElementById('konselingIdDhika').value = idDhika;
+        document.getElementById('catatanModalDhika').style.display = 'block';
+    }
+    
+    function closeCatatanModalDhika() {
+        document.getElementById('catatanModalDhika').style.display = 'none';
+        document.getElementById('formCatatanDhika').reset();
+    }
+    
+    document.getElementById('formCatatanDhika').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const idDhika = document.getElementById('konselingIdDhika').value;
+        const catatanDhika = document.getElementById('catatanDhika').value;
+        
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/konseling/update/${idDhika}`;
+        
+        const statusInput = document.createElement('input');
+        statusInput.type = 'hidden';
+        statusInput.name = 'status';
+        statusInput.value = 'disetujui';
+        
+        const catatanInput = document.createElement('input');
+        catatanInput.type = 'hidden';
+        catatanInput.name = 'catatan';
+        catatanInput.value = catatanDhika;
+        
+        form.appendChild(statusInput);
+        form.appendChild(catatanInput);
+        document.body.appendChild(form);
+        form.submit();
+    });
+    
+    function detailKonselingDhika(idDhika) {
+        alert('Detail konseling ID: ' + idDhika);
+    }
+    
+    window.onclick = function(event) {
+        const modal = document.getElementById('catatanModalDhika');
+        if (event.target == modal) {
+            closeCatatanModalDhika();
+        }
+    }
+</script>
+{% endblock %}

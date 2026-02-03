@@ -1,0 +1,607 @@
+{% extends 'base_dhika.html' %}
+
+{% block titleDhika %}Kelola User - BK SMKN 2 Cimahi{% endblock %}
+
+{% block styleDhika %}
+<style>
+    .userHeaderDhika {
+        background: white;
+        border-radius: 20px;
+        padding: 25px 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .userHeaderDhika h3 {
+        margin: 0;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .btnAddUserDhika {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btnAddUserDhika:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .userFilterDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .userFilterDhika select,
+    .userFilterDhika input {
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+    
+    .userFilterDhika select:focus,
+    .userFilterDhika input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .userFilterDhika input {
+        flex: 1;
+        min-width: 250px;
+    }
+    
+    .userTableDhika {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+    
+    .userTableDhika table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .userTableDhika th {
+        background: #f8f9fa;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        color: #333;
+        border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .userTableDhika td {
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: middle;
+    }
+    
+    .userTableDhika tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .userAvatarTableDhika {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+    }
+    
+    .userInfoDhika {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .userInfoDhika div h6 {
+        margin: 0 0 3px 0;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .userInfoDhika div p {
+        margin: 0;
+        font-size: 13px;
+        color: #666;
+    }
+    
+    .roleBadgeDhika {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+    }
+    
+    .roleBadgeDhika.siswa {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .roleBadgeDhika.guru_bk {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+    
+    .roleBadgeDhika.admin {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+    
+    .actionBtnsDhika {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .actionBtnsDhika button {
+        width: 35px;
+        height: 35px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .actionBtnsDhika .btnEditDhika {
+        background: #4A90E2;
+        color: white;
+    }
+    
+    .actionBtnsDhika .btnDeleteDhika {
+        background: #E74C3C;
+        color: white;
+    }
+    
+    .actionBtnsDhika button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    
+    .modalDhika {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        animation: fadeInDhika 0.3s;
+    }
+    
+    .modalContentDhika {
+        background: white;
+        margin: 5% auto;
+        padding: 0;
+        border-radius: 20px;
+        max-width: 600px;
+        animation: slideDownDhika 0.3s;
+        overflow: hidden;
+    }
+    
+    @keyframes fadeInDhika {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideDownDhika {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .modalHeaderDhika {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px 30px;
+    }
+    
+    .modalHeaderDhika h4 {
+        margin: 0;
+        font-weight: 600;
+    }
+    
+    .modalBodyDhika {
+        padding: 30px;
+    }
+    
+    .formGroupDhika {
+        margin-bottom: 20px;
+    }
+    
+    .formGroupDhika label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    
+    .formGroupDhika input,
+    .formGroupDhika select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 15px;
+        transition: all 0.3s;
+    }
+    
+    .formGroupDhika input:focus,
+    .formGroupDhika select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .modalFooterDhika {
+        padding: 20px 30px;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+    
+    .modalFooterDhika button {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btnSaveDhika {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .btnCancelDhika {
+        background: #e0e0e0;
+        color: #666;
+    }
+    
+    .btnSaveDhika:hover,
+    .btnCancelDhika:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .statsCardsDhika {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .statsCardDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+    
+    .statsCardDhika i {
+        font-size: 36px;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .statsCardDhika h3 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+    
+    .statsCardDhika p {
+        color: #666;
+        margin: 5px 0 0 0;
+        font-size: 14px;
+    }
+    
+    @media (max-width: 768px) {
+        .userHeaderDhika {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .userTableDhika {
+            overflow-x: auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block contentDhika %}
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2 class="fw-bold text-white">
+                <i class="fas fa-users-cog"></i> Kelola User
+            </h2>
+            <p class="text-white-50">Manajemen akun siswa, guru BK, dan admin</p>
+        </div>
+    </div>
+    
+    <div class="statsCardsDhika">
+        <div class="statsCardDhika">
+            <i class="fas fa-user-graduate"></i>
+            <h3>{{ user_list|selectattr('roleDhika', 'equalto', 'siswa')|list|length }}</h3>
+            <p>Total Siswa</p>
+        </div>
+        <div class="statsCardDhika">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <h3>{{ user_list|selectattr('roleDhika', 'equalto', 'guru_bk')|list|length }}</h3>
+            <p>Guru BK</p>
+        </div>
+        <div class="statsCardDhika">
+            <i class="fas fa-user-shield"></i>
+            <h3>{{ user_list|selectattr('roleDhika', 'equalto', 'admin')|list|length }}</h3>
+            <p>Admin</p>
+        </div>
+        <div class="statsCardDhika">
+            <i class="fas fa-users"></i>
+            <h3>{{ user_list|length }}</h3>
+            <p>Total User</p>
+        </div>
+    </div>
+    
+    <div class="userHeaderDhika">
+        <div>
+            <h3>Daftar User</h3>
+            <small class="text-muted">Kelola semua pengguna sistem</small>
+        </div>
+        <button class="btnAddUserDhika" onclick="openModalAddDhika()">
+            <i class="fas fa-plus"></i> Tambah User Baru
+        </button>
+    </div>
+    
+    <div class="userFilterDhika">
+        <select id="roleFilterDhika" onchange="filterUsersDhika()">
+            <option value="semua">Semua Role</option>
+            <option value="siswa">Siswa</option>
+            <option value="guru_bk">Guru BK</option>
+            <option value="admin">Admin</option>
+        </select>
+        
+        <input type="text" id="searchUserDhika" placeholder="🔍 Cari nama, username, atau email..." onkeyup="searchUsersDhika()">
+        
+        <button class="btn btn-outline-primary" onclick="resetFilterDhika()">
+            <i class="fas fa-redo"></i> Reset
+        </button>
+    </div>
+    
+    <div class="userTableDhika">
+        <table id="userTableDhika">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>User</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Terdaftar</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if user_list %}
+                    {% for user in user_list %}
+                    <tr data-role="{{ user.roleDhika }}">
+                        <td>{{ loop.index }}</td>
+                        <td>
+                            <div class="userInfoDhika">
+                                <div class="userAvatarTableDhika">
+                                    {{ user.namaDhika[0].upper() }}
+                                </div>
+                                <div>
+                                    <h6>{{ user.namaDhika }}</h6>
+                                    <p>
+                                        {% if user.roleDhika == 'siswa' %}
+                                        <i class="fas fa-user-graduate"></i> Siswa
+                                        {% elif user.roleDhika == 'guru_bk' %}
+                                        <i class="fas fa-chalkboard-teacher"></i> Guru BK
+                                        {% else %}
+                                        <i class="fas fa-user-shield"></i> Admin
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ user.usernameDhika }}</td>
+                        <td>{{ user.emailDhika if user.emailDhika else '-' }}</td>
+                        <td>
+                            <span class="roleBadgeDhika {{ user.roleDhika }}">
+                                {{ user.roleDhika.replace('_', ' ').title() }}
+                            </span>
+                        </td>
+                        <td>{{ user.createdDhika.strftime('%d %b %Y') }}</td>
+                        <td>
+                            <div class="actionBtnsDhika">
+                                <button class="btnEditDhika" title="Edit" onclick="editUserDhika({{ user.idDhika }})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btnDeleteDhika" title="Hapus" onclick="deleteUserDhika({{ user.idDhika }}, '{{ user.namaDhika }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Belum ada user terdaftar</p>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="modalUserDhika" class="modalDhika">
+    <div class="modalContentDhika">
+        <div class="modalHeaderDhika">
+            <h4 id="modalTitleDhika">
+                <i class="fas fa-user-plus"></i> Tambah User Baru
+            </h4>
+        </div>
+        
+        <form id="formUserDhika" method="POST" action="{{ url_for('addUserDhika') }}">
+            <div class="modalBodyDhika">
+                <div class="formGroupDhika">
+                    <label><i class="fas fa-user"></i> Nama Lengkap</label>
+                    <input type="text" name="nama" id="namaUserDhika" placeholder="Masukkan nama lengkap" required>
+                </div>
+                
+                <div class="formGroupDhika">
+                    <label><i class="fas fa-id-card"></i> Username</label>
+                    <input type="text" name="username" id="usernameUserDhika" placeholder="Masukkan username" required>
+                </div>
+                
+                <div class="formGroupDhika">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" name="email" id="emailUserDhika" placeholder="Masukkan email">
+                </div>
+                
+                <div class="formGroupDhika">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" name="password" id="passwordUserDhika" placeholder="Masukkan password" required>
+                    <small class="text-muted">Minimal 6 karakter</small>
+                </div>
+                
+                <div class="formGroupDhika">
+                    <label><i class="fas fa-user-tag"></i> Role</label>
+                    <select name="role" id="roleUserDhika" required>
+                        <option value="">-- Pilih Role --</option>
+                        <option value="siswa">Siswa</option>
+                        <option value="guru_bk">Guru BK</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="modalFooterDhika">
+                <button type="button" class="btnCancelDhika" onclick="closeModalUserDhika()">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button type="submit" class="btnSaveDhika">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDhika %}
+<script>
+    function openModalAddDhika() {
+        document.getElementById('modalUserDhika').style.display = 'block';
+        document.getElementById('modalTitleDhika').innerHTML = '<i class="fas fa-user-plus"></i> Tambah User Baru';
+        document.getElementById('formUserDhika').reset();
+    }
+    
+    function closeModalUserDhika() {
+        document.getElementById('modalUserDhika').style.display = 'none';
+    }
+    
+    function editUserDhika(userId) {
+        alert('Edit user ID: ' + userId);
+        document.getElementById('modalUserDhika').style.display = 'block';
+        document.getElementById('modalTitleDhika').innerHTML = '<i class="fas fa-user-edit"></i> Edit User';
+    }
+    
+    function deleteUserDhika(userId, userName) {
+        if (confirm(`Apakah Anda yakin ingin menghapus user "${userName}"?\n\nTindakan ini tidak dapat dibatalkan!`)) {
+            alert('User ID ' + userId + ' akan dihapus');
+        }
+    }
+    
+    function filterUsersDhika() {
+        const roleFilter = document.getElementById('roleFilterDhika').value;
+        const rows = document.querySelectorAll('#userTableDhika tbody tr');
+        
+        rows.forEach(row => {
+            if (roleFilter === 'semua' || row.dataset.role === roleFilter) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+    
+    function searchUsersDhika() {
+        const searchTerm = document.getElementById('searchUserDhika').value.toLowerCase();
+        const rows = document.querySelectorAll('#userTableDhika tbody tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+    
+    function resetFilterDhika() {
+        document.getElementById('roleFilterDhika').value = 'semua';
+        document.getElementById('searchUserDhika').value = '';
+        
+        const rows = document.querySelectorAll('#userTableDhika tbody tr');
+        rows.forEach(row => {
+            row.style.display = '';
+        });
+    }
+    
+    window.onclick = function(event) {
+        const modal = document.getElementById('modalUserDhika');
+        if (event.target == modal) {
+            closeModalUserDhika();
+        }
+    }
+</script>
+{% endblock %}

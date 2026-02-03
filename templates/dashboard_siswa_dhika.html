@@ -1,0 +1,311 @@
+{% extends 'base_dhika.html' %}
+
+{% block titleDhika %}Dashboard Siswa - BK SMKN 2 Cimahi{% endblock %}
+
+{% block styleDhika %}
+<style>
+    .statCardDhika {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .statCardDhika::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    
+    .statCardDhika h3 {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .statCardDhika p {
+        margin: 0;
+        opacity: 0.9;
+    }
+    
+    .statCardDhika i {
+        font-size: 48px;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.3;
+    }
+    
+    .quickActionDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+    }
+    
+    .quickActionDhika:hover {
+        transform: translateY(-5px);
+        border-color: #667eea;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .quickActionDhika i {
+        font-size: 48px;
+        margin-bottom: 15px;
+        color: #667eea;
+    }
+    
+    .quickActionDhika h5 {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .quickActionDhika p {
+        color: #666;
+        font-size: 14px;
+        margin: 0;
+    }
+    
+    .btnEmergencyDhika {
+        background: #E74C3C;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 50px;
+        border: none;
+        font-weight: 600;
+        font-size: 16px;
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        animation: pulseDhika 2s infinite;
+    }
+    
+    @keyframes pulseDhika {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+    
+    .statusBadgeDhika {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .statusBadgeDhika.pending {
+        background: #FFF3CD;
+        color: #856404;
+    }
+    
+    .statusBadgeDhika.disetujui {
+        background: #D4EDDA;
+        color: #155724;
+    }
+    
+    .statusBadgeDhika.ditolak {
+        background: #F8D7DA;
+        color: #721C24;
+    }
+    
+    .statusBadgeDhika.selesai {
+        background: #D1ECF1;
+        color: #0C5460;
+    }
+</style>
+{% endblock %}
+
+{% block contentDhika %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-white">
+                <i class="fas fa-home"></i> Dashboard Siswa
+            </h2>
+            <p class="text-white-50">Selamat datang, {{ session.nama_dhika }}!</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="statCardDhika" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h3>{{ total }}</h3>
+                <p>Total Konseling</p>
+                <i class="fas fa-calendar-check"></i>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="statCardDhika" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <h3>{{ pending }}</h3>
+                <p>Menunggu Persetujuan</p>
+                <i class="fas fa-clock"></i>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="statCardDhika" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <h3>0</h3>
+                <p>Konseling Bulan Ini</p>
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <button class="btnEmergencyDhika" onclick="emergencyDhika()">
+                <i class="fas fa-exclamation-triangle"></i> Butuh Bantuan Segera?
+            </button>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="cardDhika">
+                <h4 class="fw-bold mb-3">
+                    <i class="fas fa-bolt text-warning"></i> Aksi Cepat
+                </h4>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="{{ url_for('ajukanKonselingDhika') }}" style="text-decoration: none;">
+                            <div class="quickActionDhika">
+                                <i class="fas fa-calendar-plus"></i>
+                                <h5>Ajukan Konseling</h5>
+                                <p>Buat janji konseling baru</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('chatDhika') }}" style="text-decoration: none;">
+                            <div class="quickActionDhika">
+                                <i class="fas fa-comments"></i>
+                                <h5>Chat Guru BK</h5>
+                                <p>Kirim pesan langsung</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" style="text-decoration: none;">
+                            <div class="quickActionDhika">
+                                <i class="fas fa-book"></i>
+                                <h5>Modul Bimbingan</h5>
+                                <p>Akses materi BK</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" style="text-decoration: none;">
+                            <div class="quickActionDhika">
+                                <i class="fas fa-history"></i>
+                                <h5>Riwayat</h5>
+                                <p>Lihat riwayat konseling</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="cardDhika">
+                <h4 class="fw-bold mb-3">
+                    <i class="fas fa-history text-info"></i> Riwayat Konseling Terbaru
+                </h4>
+                
+                {% if konseling %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Jenis Bimbingan</th>
+                                <th>Guru BK</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for k in konseling %}
+                            <tr>
+                                <td>{{ k.tanggalDhika.strftime('%d %b %Y %H:%M') if k.tanggalDhika else '-' }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ k.jenisDhika }}</span>
+                                </td>
+                                <td>Guru BK</td>
+                                <td>
+                                    <span class="statusBadgeDhika {{ k.statusDhika }}">
+                                        {{ k.statusDhika }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" onclick="detailKonselingDhika({{ k.idDhika }})">
+                                        <i class="fas fa-eye"></i> Detail
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Belum ada riwayat konseling</p>
+                    <a href="{{ url_for('ajukanKonselingDhika') }}" class="btn btnPrimaryDhika">
+                        <i class="fas fa-plus"></i> Ajukan Konseling Pertama
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="cardDhika" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-lightbulb"></i> Tips Hari Ini
+                </h5>
+                <p>"Jangan takut untuk meminta bantuan. Berbicara dengan orang yang tepat adalah tanda kekuatan, bukan kelemahan."</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="cardDhika" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-calendar"></i> Jadwal Berikutnya
+                </h5>
+                <p>Belum ada jadwal konseling yang dikonfirmasi</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDhika %}
+<script>
+    function emergencyDhika() {
+        if(confirm('Apakah Anda membutuhkan bantuan segera? Kami akan menghubungi Guru BK yang tersedia.')) {
+            window.location.href = '{{ url_for("chatDhika") }}';
+        }
+    }
+    
+    function detailKonselingDhika(idDhika) {
+        alert('Detail konseling ID: ' + idDhika);
+    }
+</script>
+{% endblock %}

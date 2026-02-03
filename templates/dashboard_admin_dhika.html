@@ -1,0 +1,498 @@
+{% extends 'base_dhika.html' %}
+
+{% block titleDhika %}Dashboard Admin - BK SMKN 2 Cimahi{% endblock %}
+
+{% block styleDhika %}
+<style>
+    .adminStatCardDhika {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s;
+    }
+    
+    .adminStatCardDhika:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    
+    .adminStatCardDhika::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(40%, -40%);
+    }
+    
+    .adminStatCardDhika .iconBoxDhika {
+        width: 70px;
+        height: 70px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin-bottom: 15px;
+        color: white;
+    }
+    
+    .adminStatCardDhika.users .iconBoxDhika {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .adminStatCardDhika.guru .iconBoxDhika {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .adminStatCardDhika.konseling .iconBoxDhika {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .adminStatCardDhika.bulan .iconBoxDhika {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+    
+    .adminStatCardDhika h3 {
+        font-size: 42px;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+    
+    .adminStatCardDhika p {
+        color: #666;
+        margin: 5px 0 0 0;
+        font-size: 15px;
+    }
+    
+    .adminStatCardDhika .trendDhika {
+        font-size: 13px;
+        color: #50C878;
+        margin-top: 10px;
+    }
+    
+    .adminStatCardDhika .trendDhika i {
+        margin-right: 5px;
+    }
+    
+    .chartCardDhika {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .chartCardDhika h4 {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    
+    .activityItemDhika {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-left: 3px solid #667eea;
+        margin-bottom: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+    
+    .activityItemDhika:hover {
+        background: #e9ecef;
+        padding-left: 20px;
+    }
+    
+    .activityIconDhika {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 18px;
+        color: white;
+    }
+    
+    .activityIconDhika.login {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .activityIconDhika.konseling {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .activityIconDhika.user {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .activityContentDhika h6 {
+        margin: 0 0 5px 0;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .activityContentDhika small {
+        color: #666;
+    }
+    
+    .quickLinkDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        border: 2px solid transparent;
+    }
+    
+    .quickLinkDhika:hover {
+        transform: translateY(-5px);
+        border-color: #667eea;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .quickLinkDhika i {
+        font-size: 48px;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .quickLinkDhika h5 {
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+    
+    .systemHealthDhika {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .systemHealthDhika .statusDhika {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #50C878;
+        margin-right: 10px;
+        animation: pulseDhika 2s infinite;
+    }
+    
+    @keyframes pulseDhika {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+</style>
+{% endblock %}
+
+{% block contentDhika %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-white">
+                <i class="fas fa-shield-alt"></i> Dashboard Admin
+            </h2>
+            <p class="text-white-50">Kelola sistem dan monitor aktivitas</p>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="adminStatCardDhika users">
+                <div class="iconBoxDhika">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h3>{{ total_siswa }}</h3>
+                <p>Total Siswa</p>
+                <div class="trendDhika">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="adminStatCardDhika guru">
+                <div class="iconBoxDhika">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h3>{{ total_guru }}</h3>
+                <p>Guru BK Aktif</p>
+                <div class="trendDhika">
+                    <i class="fas fa-check"></i> Semua aktif
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="adminStatCardDhika konseling">
+                <div class="iconBoxDhika">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h3>{{ total_konseling }}</h3>
+                <p>Total Konseling</p>
+                <div class="trendDhika">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="adminStatCardDhika bulan">
+                <div class="iconBoxDhika">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>100%</h3>
+                <p>Tingkat Keberhasilan</p>
+                <div class="trendDhika">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="chartCardDhika">
+                <h4><i class="fas fa-bolt text-warning"></i> Akses Cepat</h4>
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('usersManagementDhika') }}" style="text-decoration: none;">
+                            <div class="quickLinkDhika">
+                                <i class="fas fa-users-cog"></i>
+                                <h5>Kelola User</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-3">
+                        <a href="#" style="text-decoration: none;">
+                            <div class="quickLinkDhika">
+                                <i class="fas fa-database"></i>
+                                <h5>Backup Data</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-3">
+                        <a href="#" style="text-decoration: none;">
+                            <div class="quickLinkDhika">
+                                <i class="fas fa-chart-bar"></i>
+                                <h5>Laporan</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-3">
+                        <a href="#" style="text-decoration: none;">
+                            <div class="quickLinkDhika">
+                                <i class="fas fa-cog"></i>
+                                <h5>Pengaturan</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-3">
+                        <a href="#" style="text-decoration: none;">
+                            <div class="quickLinkDhika">
+                                <i class="fas fa-bell"></i>
+                                <h5>Notifikasi</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-3">
+                        <a href="#" style="text-decoration: none;">
+                            <div class="quickLinkDhika">
+                                <i class="fas fa-history"></i>
+                                <h5>Activity Log</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="chartCardDhika">
+                <h4><i class="fas fa-heartbeat text-danger"></i> Status Sistem</h4>
+                
+                <div class="systemHealthDhika">
+                    <div class="d-flex align-items-center">
+                        <div class="statusDhika"></div>
+                        <strong>Database</strong>
+                    </div>
+                    <span class="badge bg-success">Online</span>
+                </div>
+                
+                <div class="systemHealthDhika">
+                    <div class="d-flex align-items-center">
+                        <div class="statusDhika"></div>
+                        <strong>Server</strong>
+                    </div>
+                    <span class="badge bg-success">Running</span>
+                </div>
+                
+                <div class="systemHealthDhika">
+                    <div class="d-flex align-items-center">
+                        <div class="statusDhika"></div>
+                        <strong>Storage</strong>
+                    </div>
+                    <span class="badge bg-warning text-dark">75% Used</span>
+                </div>
+                
+                <div class="systemHealthDhika">
+                    <div class="d-flex align-items-center">
+                        <div class="statusDhika"></div>
+                        <strong>Last Backup</strong>
+                    </div>
+                    <small class="text-muted">2 jam yang lalu</small>
+                </div>
+                
+                <button class="btn btn-primary w-100 mt-3">
+                    <i class="fas fa-sync-alt"></i> Refresh Status
+                </button>
+            </div>
+        </div>
+        
+        <div class="col-lg-8 mb-4">
+            <div class="chartCardDhika">
+                <h4><i class="fas fa-history text-info"></i> Aktivitas Terbaru</h4>
+                
+                <div class="activityItemDhika">
+                    <div class="activityIconDhika login">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="activityContentDhika">
+                        <h6>Login User Baru</h6>
+                        <small>Ahmad Fauzi login sebagai siswa - 5 menit yang lalu</small>
+                    </div>
+                </div>
+                
+                <div class="activityItemDhika">
+                    <div class="activityIconDhika konseling">
+                        <i class="fas fa-calendar-plus"></i>
+                    </div>
+                    <div class="activityContentDhika">
+                        <h6>Konseling Baru Diajukan</h6>
+                        <small>Siti Nurhaliza mengajukan konseling pribadi - 15 menit yang lalu</small>
+                    </div>
+                </div>
+                
+                <div class="activityItemDhika">
+                    <div class="activityIconDhika user">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activityContentDhika">
+                        <h6>User Baru Ditambahkan</h6>
+                        <small>Admin menambahkan Guru BK baru: Ibu Rina - 1 jam yang lalu</small>
+                    </div>
+                </div>
+                
+                <div class="activityItemDhika">
+                    <div class="activityIconDhika konseling">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="activityContentDhika">
+                        <h6>Konseling Selesai</h6>
+                        <small>Guru BK menyelesaikan sesi dengan Budi Santoso - 2 jam yang lalu</small>
+                    </div>
+                </div>
+                
+                <div class="activityItemDhika">
+                    <div class="activityIconDhika login">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="activityContentDhika">
+                        <h6>Backup Otomatis</h6>
+                        <small>Sistem melakukan backup database otomatis - 3 jam yang lalu</small>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="fas fa-history"></i> Lihat Semua Aktivitas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDhika %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctxPie = document.getElementById('pieChartDhika').getContext('2d');
+    const pieChartDhika = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pribadi', 'Sosial', 'Karir', 'Belajar'],
+            datasets: [{
+                data: [35, 25, 20, 20],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(79, 172, 254, 0.8)',
+                    'rgba(67, 233, 123, 0.8)'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+    
+    const ctxLine = document.getElementById('lineChartDhika').getContext('2d');
+    const lineChartDhika = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov'],
+            datasets: [{
+                label: 'Jumlah Konseling',
+                data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 38],
+                borderColor: 'rgba(102, 126, 234, 1)',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

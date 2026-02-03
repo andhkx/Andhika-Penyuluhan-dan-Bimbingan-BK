@@ -1,0 +1,495 @@
+{% extends 'base_dhika.html' %}
+
+{% block titleDhika %}Notifikasi - BK SMKN 2 Cimahi{% endblock %}
+
+{% block styleDhika %}
+<style>
+    .notifContainerDhika {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .notifHeaderDhika {
+        background: white;
+        border-radius: 20px;
+        padding: 25px 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .notifHeaderDhika h3 {
+        margin: 0;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .notifFilterDhika {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .notifFilterDhika button {
+        padding: 8px 20px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        font-size: 14px;
+    }
+    
+    .notifFilterDhika button:hover {
+        border-color: #667eea;
+        color: #667eea;
+    }
+    
+    .notifFilterDhika button.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+    
+    .notifItemDhika {
+        background: white;
+        border-radius: 15px;
+        padding: 20px 25px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .notifItemDhika::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transform: scaleY(0);
+        transition: transform 0.3s;
+    }
+    
+    .notifItemDhika:hover::before {
+        transform: scaleY(1);
+    }
+    
+    .notifItemDhika:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+    }
+    
+    .notifItemDhika.unread {
+        background: linear-gradient(90deg, rgba(102,126,234,0.05) 0%, white 100%);
+        border-left: 4px solid #667eea;
+    }
+    
+    .notifIconDhika {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: white;
+        flex-shrink: 0;
+    }
+    
+    .notifIconDhika.success {
+        background: linear-gradient(135deg, #50C878 0%, #38B764 100%);
+    }
+    
+    .notifIconDhika.info {
+        background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    }
+    
+    .notifIconDhika.warning {
+        background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%);
+    }
+    
+    .notifIconDhika.danger {
+        background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+    }
+    
+    .notifContentDhika {
+        flex: 1;
+    }
+    
+    .notifContentDhika h5 {
+        margin: 0 0 8px 0;
+        font-weight: 600;
+        color: #333;
+        font-size: 16px;
+    }
+    
+    .notifContentDhika p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .notifMetaDhika {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 10px;
+    }
+    
+    .notifTimeDhika {
+        font-size: 13px;
+        color: #999;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .notifActionsDhika {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-shrink: 0;
+    }
+    
+    .notifActionsDhika button {
+        width: 35px;
+        height: 35px;
+        border: none;
+        background: #f8f9fa;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .notifActionsDhika button:hover {
+        background: #667eea;
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .notifBadgeDhika {
+        background: #667eea;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .emptyNotifDhika {
+        background: white;
+        border-radius: 20px;
+        padding: 80px 40px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .emptyNotifDhika i {
+        font-size: 80px;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+    }
+    
+    .emptyNotifDhika h4 {
+        color: #666;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .emptyNotifDhika p {
+        color: #999;
+        margin: 0;
+    }
+    
+    .markAllReadDhika {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .markAllReadDhika:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+        .notifHeaderDhika {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .notifFilterDhika {
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        .notifItemDhika {
+            flex-direction: column;
+        }
+        
+        .notifActionsDhika {
+            width: 100%;
+            justify-content: flex-end;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block contentDhika %}
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2 class="fw-bold text-white">
+                <i class="fas fa-bell"></i> Notifikasi
+            </h2>
+            <p class="text-white-50">Lihat semua pemberitahuan Anda</p>
+        </div>
+    </div>
+    
+    <div class="notifContainerDhika">
+        <div class="notifHeaderDhika">
+            <div>
+                <h3>Semua Notifikasi</h3>
+                <small class="text-muted">{{ notif_list|length }} notifikasi</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="markAllReadDhika" onclick="markAllReadDhika()">
+                    <i class="fas fa-check-double"></i> Tandai Semua Dibaca
+                </button>
+                <div class="notifFilterDhika">
+                    <button class="active" onclick="filterNotifDhika('semua')">Semua</button>
+                    <button onclick="filterNotifDhika('unread')">Belum Dibaca</button>
+                </div>
+            </div>
+        </div>
+        
+        {% if notif_list %}
+            <div id="notifListDhika">
+                {% for notif in notif_list %}
+                <div class="notifItemDhika {% if not notif.terbacaDhika %}unread{% endif %}" data-read="{{ notif.terbacaDhika }}">
+                    <div class="notifIconDhika success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    
+                    <div class="notifContentDhika">
+                        <h5>{{ notif.judulDhika }}</h5>
+                        <p>{{ notif.pesanDhika }}</p>
+                        <div class="notifMetaDhika">
+                            <div class="notifTimeDhika">
+                                <i class="fas fa-clock"></i>
+                                {{ notif.waktuDhika.strftime('%d %b %Y, %H:%M') }}
+                            </div>
+                            {% if not notif.terbacaDhika %}
+                            <span class="notifBadgeDhika">BARU</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="notifActionsDhika">
+                        <button title="Tandai dibaca" onclick="markReadDhika({{ notif.idDhika }})">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button title="Hapus" onclick="deleteNotifDhika({{ notif.idDhika }})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <div class="notifItemDhika unread" data-read="false">
+                    <div class="notifIconDhika info">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="notifContentDhika">
+                        <h5>Konseling Disetujui</h5>
+                        <p>Permintaan konseling Anda telah disetujui oleh Guru BK. Jadwal: Besok, 10:00 WIB</p>
+                        <div class="notifMetaDhika">
+                            <div class="notifTimeDhika">
+                                <i class="fas fa-clock"></i>
+                                5 menit yang lalu
+                            </div>
+                            <span class="notifBadgeDhika">BARU</span>
+                        </div>
+                    </div>
+                    <div class="notifActionsDhika">
+                        <button title="Tandai dibaca">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="notifItemDhika" data-read="true">
+                    <div class="notifIconDhika warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="notifContentDhika">
+                        <h5>Pengingat Konseling</h5>
+                        <p>Anda memiliki jadwal konseling dalam 1 jam. Jangan lupa untuk hadir tepat waktu!</p>
+                        <div class="notifMetaDhika">
+                            <div class="notifTimeDhika">
+                                <i class="fas fa-clock"></i>
+                                1 jam yang lalu
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notifActionsDhika">
+                        <button title="Tandai dibaca">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="notifItemDhika" data-read="true">
+                    <div class="notifIconDhika success">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <div class="notifContentDhika">
+                        <h5>Pesan Baru</h5>
+                        <p>Anda menerima pesan baru dari Guru BK. Segera cek pesan Anda!</p>
+                        <div class="notifMetaDhika">
+                            <div class="notifTimeDhika">
+                                <i class="fas fa-clock"></i>
+                                3 jam yang lalu
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notifActionsDhika">
+                        <button title="Tandai dibaca">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="notifItemDhika" data-read="true">
+                    <div class="notifIconDhika info">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="notifContentDhika">
+                        <h5>Catatan Konseling Ditambahkan</h5>
+                        <p>Guru BK telah menambahkan catatan untuk sesi konseling terakhir Anda. Lihat detail untuk informasi lebih lanjut.</p>
+                        <div class="notifMetaDhika">
+                            <div class="notifTimeDhika">
+                                <i class="fas fa-clock"></i>
+                                Kemarin, 14:30
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notifActionsDhika">
+                        <button title="Tandai dibaca">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="emptyNotifDhika">
+                <i class="fas fa-bell-slash"></i>
+                <h4>Belum Ada Notifikasi</h4>
+                <p>Anda akan menerima notifikasi di sini ketika ada update</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDhika %}
+<script>
+    function filterNotifDhika(filter) {
+        document.querySelectorAll('.notifFilterDhika button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        const notifs = document.querySelectorAll('.notifItemDhika');
+        notifs.forEach(notif => {
+            if (filter === 'semua') {
+                notif.style.display = 'flex';
+            } else if (filter === 'unread') {
+                notif.style.display = notif.dataset.read === 'false' || notif.classList.contains('unread') ? 'flex' : 'none';
+            }
+        });
+    }
+    
+    function markReadDhika(notifId) {
+        event.target.closest('.notifItemDhika').classList.remove('unread');
+        event.target.closest('.notifItemDhika').dataset.read = 'true';
+        
+        const badge = event.target.closest('.notifItemDhika').querySelector('.notifBadgeDhika');
+        if (badge) badge.remove();
+        
+        console.log('Mark read notification:', notifId);
+    }
+    
+    function deleteNotifDhika(notifId) {
+        if (confirm('Hapus notifikasi ini?')) {
+            event.target.closest('.notifItemDhika').style.animation = 'slideOutDhika 0.3s';
+            setTimeout(() => {
+                event.target.closest('.notifItemDhika').remove();
+                
+                if (document.querySelectorAll('.notifItemDhika').length === 0) {
+                    document.getElementById('notifListDhika').innerHTML = `
+                        <div class="emptyNotifDhika">
+                            <i class="fas fa-bell-slash"></i>
+                            <h4>Belum Ada Notifikasi</h4>
+                            <p>Anda akan menerima notifikasi di sini ketika ada update</p>
+                        </div>
+                    `;
+                }
+            }, 300);
+            console.log('Delete notification:', notifId);
+        }
+    }
+    
+    function markAllReadDhika() {
+        const unreadNotifs = document.querySelectorAll('.notifItemDhika.unread');
+        unreadNotifs.forEach(notif => {
+            notif.classList.remove('unread');
+            notif.dataset.read = 'true';
+            const badge = notif.querySelector('.notifBadgeDhika');
+            if (badge) badge.remove();
+        });
+        
+        alert('Semua notifikasi telah ditandai dibaca');
+    }
+</script>
+
+<style>
+    @keyframes slideOutDhika {
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+</style>
+{% endblock %}

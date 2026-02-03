@@ -1,0 +1,283 @@
+{% extends 'base_dhika.html' %}
+
+{% block titleDhika %}Ajukan Konseling - BK SMKN 2 Cimahi{% endblock %}
+
+{% block styleDhika %}
+<style>
+    .formCardDhika {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .formGroupDhika {
+        margin-bottom: 25px;
+    }
+    
+    .formGroupDhika label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .formGroupDhika label i {
+        color: #667eea;
+        margin-right: 8px;
+    }
+    
+    .formGroupDhika input,
+    .formGroupDhika select,
+    .formGroupDhika textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 15px;
+        transition: all 0.3s;
+    }
+    
+    .formGroupDhika input:focus,
+    .formGroupDhika select:focus,
+    .formGroupDhika textarea:focus {
+        border-color: #667eea;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .jenisBimbinganDhika {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 10px;
+    }
+    
+    .jenisBimbinganDhika label {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+        position: relative;
+    }
+    
+    .jenisBimbinganDhika label:hover {
+        border-color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    }
+    
+    .jenisBimbinganDhika input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+    }
+    
+    .jenisBimbinganDhika input[type="radio"]:checked + div {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .jenisBimbinganDhika input[type="radio"]:checked + div i {
+        color: white;
+    }
+    
+    .jenisBimbinganCard {
+        transition: all 0.3s;
+    }
+    
+    .jenisBimbinganCard i {
+        font-size: 40px;
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+    
+    .jenisBimbinganCard h6 {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .jenisBimbinganCard p {
+        font-size: 12px;
+        margin: 0;
+        opacity: 0.8;
+    }
+    
+    .btnSubmitDhika {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 50px;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: transform 0.3s;
+    }
+    
+    .btnSubmitDhika:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+        .jenisBimbinganDhika {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block contentDhika %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-white">
+                <i class="fas fa-calendar-plus"></i> Ajukan Konseling
+            </h2>
+            <p class="text-white-50">Isi form berikut untuk mengajukan sesi konseling</p>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="formCardDhika">
+                <form method="POST" action="{{ url_for('ajukanKonselingDhika') }}" id="formKonselingDhika">
+                    
+                    <div class="formGroupDhika">
+                        <label>
+                            <i class="fas fa-list"></i> Pilih Jenis Bimbingan
+                        </label>
+                        <div class="jenisBimbinganDhika">
+                            <label>
+                                <input type="radio" name="jenis" value="pribadi" required>
+                                <div class="jenisBimbinganCard">
+                                    <i class="fas fa-user"></i>
+                                    <h6>Bimbingan Pribadi</h6>
+                                    <p>Masalah pribadi & emosional</p>
+                                </div>
+                            </label>
+                            
+                            <label>
+                                <input type="radio" name="jenis" value="sosial" required>
+                                <div class="jenisBimbinganCard">
+                                    <i class="fas fa-users"></i>
+                                    <h6>Bimbingan Sosial</h6>
+                                    <p>Hubungan dengan teman</p>
+                                </div>
+                            </label>
+                            
+                            <label>
+                                <input type="radio" name="jenis" value="karir" required>
+                                <div class="jenisBimbinganCard">
+                                    <i class="fas fa-briefcase"></i>
+                                    <h6>Bimbingan Karir</h6>
+                                    <p>Rencana masa depan</p>
+                                </div>
+                            </label>
+                            
+                            <label>
+                                <input type="radio" name="jenis" value="belajar" required>
+                                <div class="jenisBimbinganCard">
+                                    <i class="fas fa-book"></i>
+                                    <h6>Bimbingan Belajar</h6>
+                                    <p>Kesulitan akademik</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="formGroupDhika">
+                        <label>
+                            <i class="fas fa-chalkboard-teacher"></i> Pilih Guru BK
+                        </label>
+                        <select name="guru_id" class="form-select" required>
+                            <option value="">-- Pilih Guru BK --</option>
+                            {% for guru in guru_list %}
+                            <option value="{{ guru.idDhika }}">{{ guru.namaDhika }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="formGroupDhika">
+                                <label>
+                                    <i class="fas fa-calendar"></i> Tanggal Konseling
+                                </label>
+                                <input type="date" name="tanggal" class="form-control" required min="{{ today }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="formGroupDhika">
+                                <label>
+                                    <i class="fas fa-clock"></i> Jam Konseling
+                                </label>
+                                <select name="jam" class="form-select" required>
+                                    <option value="">-- Pilih Jam --</option>
+                                    <option value="08:00">08:00 - 09:00</option>
+                                    <option value="09:00">09:00 - 10:00</option>
+                                    <option value="10:00">10:00 - 11:00</option>
+                                    <option value="11:00">11:00 - 12:00</option>
+                                    <option value="13:00">13:00 - 14:00</option>
+                                    <option value="14:00">14:00 - 15:00</option>
+                                    <option value="15:00">15:00 - 16:00</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formGroupDhika">
+                        <label>
+                            <i class="fas fa-comment-dots"></i> Keterangan/Keluhan
+                        </label>
+                        <textarea name="keterangan" rows="5" class="form-control" placeholder="Jelaskan permasalahan Anda (opsional, akan dijaga kerahasiaannya)"></textarea>
+                        <small class="text-muted">
+                            <i class="fas fa-lock"></i> Informasi Anda akan dijaga kerahasiaannya
+                        </small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Catatan:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Permintaan konseling akan diproses oleh Guru BK yang dipilih</li>
+                            <li>Anda akan mendapat notifikasi setelah permintaan disetujui/ditolak</li>
+                            <li>Harap datang 5 menit sebelum waktu konseling</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-secondary btnDhika me-2" onclick="window.history.back()">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </button>
+                        <button type="submit" class="btnSubmitDhika">
+                            <i class="fas fa-paper-plane"></i> Ajukan Konseling
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDhika %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tanggalInput = document.querySelector('input[name="tanggal"]');
+        const today = new Date().toISOString().split('T')[0];
+        tanggalInput.setAttribute('min', today);
+    });
+    
+    document.getElementById('formKonselingDhika').addEventListener('submit', function(e) {
+        const jenis = document.querySelector('input[name="jenis"]:checked');
+        if (!jenis) {
+            e.preventDefault();
+            alert('Silakan pilih jenis bimbingan');
+            return false;
+        }
+    });
+</script>
+{% endblock %}

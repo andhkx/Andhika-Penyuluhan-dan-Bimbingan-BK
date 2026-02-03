@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titleDhika %}BK SMKN 2 Cimahi{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primaryDhika: #4A90E2;
+            --secondaryDhika: #50C878;
+            --dangerDhika: #E74C3C;
+            --warningDhika: #F39C12;
+            --darkDhika: #2C3E50;
+            --lightDhika: #ECF0F1;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .navbarDhika {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .sidebarDhika {
+            background: white;
+            height: calc(100vh - 76px);
+            position: fixed;
+            top: 76px;
+            left: 0;
+            width: 250px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+        
+        .sidebarDhika a {
+            color: var(--darkDhika);
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .sidebarDhika a:hover {
+            background: var(--primaryDhika);
+            color: white;
+            padding-left: 30px;
+        }
+        
+        .sidebarDhika a.active {
+            background: var(--primaryDhika);
+            color: white;
+            border-left: 4px solid var(--secondaryDhika);
+        }
+        
+        .contentDhika {
+            margin-left: 250px;
+            margin-top: 76px;
+            padding: 30px;
+        }
+        
+        .cardDhika {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .cardDhika:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .btnDhika {
+            border-radius: 25px;
+            padding: 10px 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btnPrimaryDhika {
+            background: var(--primaryDhika);
+            color: white;
+            border: none;
+        }
+        
+        .btnPrimaryDhika:hover {
+            background: #357ABD;
+            transform: scale(1.05);
+        }
+        
+        .btnSuccessDhika {
+            background: var(--secondaryDhika);
+            color: white;
+            border: none;
+        }
+        
+        .btnDangerDhika {
+            background: var(--dangerDhika);
+            color: white;
+            border: none;
+        }
+        
+        .badgeDhika {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .alertDhika {
+            border-radius: 10px;
+            border: none;
+            padding: 15px 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebarDhika {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .sidebarDhika.show {
+                width: 250px;
+            }
+            
+            .contentDhika {
+                margin-left: 0;
+            }
+        }
+    </style>
+    
+    {% block styleDhika %}{% endblock %}
+</head>
+<body>
+    
+    {% if session.user_id_dhika %}
+    <nav class="navbar navbar-expand-lg navbarDhika fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{{ url_for('dashboardDhika') }}">
+                <i class="fas fa-user-graduate text-primary"></i>
+                BK SMKN 2 Cimahi
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDhika">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarDhika">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('notifikasiDhika') }}">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge bg-danger">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> {{ session.nama_dhika }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logoutDhika') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="sidebarDhika" id="sidebarDhika">
+        <div class="p-3">
+            <h6 class="text-muted">MENU UTAMA</h6>
+        </div>
+        
+        {% if session.role_dhika == 'siswa' %}
+        <a href="{{ url_for('dashboardDhika') }}" class="active">
+            <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="{{ url_for('ajukanKonselingDhika') }}">
+            <i class="fas fa-calendar-plus"></i> Ajukan Konseling
+        </a>
+        <a href="#">
+            <i class="fas fa-history"></i> Riwayat Konseling
+        </a>
+        <a href="{{ url_for('chatDhika') }}">
+            <i class="fas fa-comments"></i> Pesan
+        </a>
+        <a href="#">
+            <i class="fas fa-book"></i> Modul Bimbingan
+        </a>
+        
+        {% elif session.role_dhika == 'guru_bk' %}
+        <a href="{{ url_for('dashboardDhika') }}" class="active">
+            <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="{{ url_for('kelolaKonselingDhika') }}">
+            <i class="fas fa-tasks"></i> Kelola Konseling
+        </a>
+        <a href="#">
+            <i class="fas fa-users"></i> Data Siswa
+        </a>
+        <a href="{{ url_for('chatDhika') }}">
+            <i class="fas fa-comments"></i> Pesan
+        </a>
+        <a href="#">
+            <i class="fas fa-chart-line"></i> Laporan
+        </a>
+        
+        {% elif session.role_dhika == 'admin' %}
+        <a href="{{ url_for('dashboardDhika') }}" class="active">
+            <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="{{ url_for('usersManagementDhika') }}">
+            <i class="fas fa-users-cog"></i> Kelola User
+        </a>
+        <a href="#">
+            <i class="fas fa-cog"></i> Pengaturan
+        </a>
+        <a href="#">
+            <i class="fas fa-database"></i> Backup Data
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    <div class="{% if session.user_id_dhika %}contentDhika{% endif %}">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alertDhika alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block contentDhika %}{% endblock %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block scriptDhika %}{% endblock %}
+    
+</body>
+</html>
